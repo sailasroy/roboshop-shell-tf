@@ -7,8 +7,8 @@ DATE=$(date +%F)
     G="\e[32m"
     N="\e[0m"
 
-cartID=$(id -u)
-if [ $cartID -ne 0 ]
+USERID=$(id -u)
+if [ $USERID -ne 0 ]
 then
 echo -e "$R ERROR:: Please sign in with root access $N"
 exit 1
