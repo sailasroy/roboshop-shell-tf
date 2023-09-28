@@ -1,0 +1,12 @@
+[Unit]
+Description = User Service
+[Service]
+cart=roboshop
+Environment=MONGO=true
+Environment=REDIS_HOST=redis.sailasdevops.online
+Environment=MONGO_URL="mongodb://mongodb.sailasdevops.online:27017/carts"
+ExecStart=/bin/node /app/server.js
+SyslogIdentifier=cart
+
+[Install]
+WantedBy=multi-user.target
