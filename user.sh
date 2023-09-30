@@ -27,7 +27,7 @@ curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$LOGFILE
     VALIDATE $? "Dowloading nodejs source file"
 yum install nodejs -y &>>$LOGFILE
     VALIDATE $? "Installing nodejs"  
-catalogueadd roboshop
+useradd roboshop
 
 mkdir /app
 
