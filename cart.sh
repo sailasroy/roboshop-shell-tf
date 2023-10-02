@@ -1,13 +1,13 @@
 #!/bin/bash
 DATE=$(date +%F)
-    SCRIPT_NAME=$0
-    LOGFILE=/tmp/$SCRIPT_NAME-$DATE.log
-   # https://github.com/sailasroy/roboshop-shell.git=/tmp/$SCRIPT_NAME-$DATE.log
-    R="\e[31m"
-    G="\e[32m"
-    N="\e[0m"
+SCRIPT_NAME=$0
+LOGFILE=/tmp/$SCRIPT_NAME-$DATE.log
+# https://github.com/sailasroy/roboshop-shell.git=/tmp/$SCRIPT_NAME-$DATE.log
+R="\e[31m"
+G="\e[32m"
+N="\e[0m"
 
-    USERNAME=$(id)
+USERNAME=$(id)
 
 USERID=$(id -u)
 if [ $USERID -ne 0 ]
@@ -53,7 +53,7 @@ cd /app &>>$LOGFILE
 npm install &>>$LOGFILE
     VALIDATE $? "Installing nodejs dependencies"
 
-cp /home/centos/roboshop-shell/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
+cp /home/centos/roboshop-shell-tf/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
     VALIDATE $? "Copying cart.service"
 
 systemctl daemon-reload &>>$LOGFILE
@@ -65,7 +65,7 @@ systemctl enable cart &>>$LOGFILE
 systemctl start cart &>>$LOGFILE
     VALIDATE $? "Starting cart.service"
 
-cp /home/centos/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+cp /home/centos/roboshop-shell-tf/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
     VALIDATE $? "Copying mongo.repo"
 
 yum install mongodb-org-shell -y &>>$LOGFILE
