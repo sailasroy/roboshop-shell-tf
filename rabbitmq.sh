@@ -30,13 +30,19 @@ VALIDATE(){
 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | bash &>>$LOGFILE
 
 curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | bash &>>$LOGFILE
+VALIDATE $? "copying repos"
 
 yum install rabbitmq-server -y  &>>$LOGFILE
+VALIDATE $? "installing rabbitmq"
 
 systemctl enable rabbitmq-server  &>>$LOGFILE
+VALIDATE $? "enabling rabbitmq"
 
 systemctl start rabbitmq-server  &>>$LOGFILE
+VALIDATE $? "starting rabbitmq"
 
 rabbitmqctl add_user roboshop roboshop123 &>>$LOGFILE
+VALIDATE $? "adding user"
 
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOGFILE
+VALIDATE $? "Setting  permissions"
