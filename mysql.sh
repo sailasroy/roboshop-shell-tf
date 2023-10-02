@@ -1,46 +1,52 @@
 #!/bin/bash
 
 DATE=$(date +%F)
-    SCRIPT_NAME=$0
-    LOGFILE=/tmp/$SCRIPT_NAME-$DATE.log
-    R="\e[31m"
-    G="\e[32m"
-    N="\e[0m"
+LOGSDIR=/tmp
+# /home/centos/shellscript-logs/script-name-date.log
+SCRIPT_NAME=$0
+LOGFILE=$LOGSDIR/$0-$DATE.log
+USERID=$(id -u)
+R="\e[31m"
+G="\e[32m"
+N="\e[0m"
+Y="\e[33m"
 
-cartID=$(id -u)
-if [ $cartID -ne 0 ]
+if [ $USERID -ne 0 ];
 then
-echo -e "$R ERROR:: Please sign in with root access $N"
-exit 1
+    echo -e "$R ERROR:: Please run this script with root access $N"
+    exit 1
 fi
 
 VALIDATE(){
-if [ $1 -ne 0 ]
-then
-echo -e "$2 ........$R FAILURE $N"
-exit 1
-else 
-echo -e "$2............$G SUCCESS $N"
-fi
+    if [ $1 -ne 0 ];
+    then
+        echo -e "$2 ... $R FAILURE $N"
+        exit 1
+    else
+        echo -e "$2 ... $G SUCCESS $N"
+    fi
 }
 
-yum module disable mysql -y &>>$LOGFILE
-VALIDATE $? "Disabling mysql"
+yum module disable mysql -y &>> $LOGFILE
 
-cp mysql.repo /etc/yum.repos.d/mysql.repo  &>>$LOGFILE
-VALIDATE $? "Copying mysql.repo"
+VALIDATE $? "Disabling the default version"
 
-yum install mysql-community-server -y &>>$LOGFILE
-VALIDATE $? "Installing mysql"
+cp /home/centos/roboshop-shell-tf/mysql.repo /etc/yum.repos.d/mysql.repo &>> $LOGFILE
 
-systemctl enable mysqld &>>$LOGFILE
-VALIDATE $? "Enabling mysql"
+VALIDATE $? "Copying MySQL repo" 
 
-systemctl start mysqld &>>$LOGFILE
-VALIDATE $? "Starting mysql"
+yum install mysql-community-server -y &>> $LOGFILE
 
-mysql_secure_installation --set-root-pass RoboShop@1 &>>$LOGFILE
-VALIDATE $? "Setting cartname and password"
+VALIDATE $? "Installing MySQL Server"
 
-# mysql -uroot -pRoboShop@1 &>>$LOGFILE
-# VALIDATE $? "Checking cartname and password"
+systemctl enable mysqld &>> $LOGFILE
+
+VALIDATE $? "Enabling MySQL"
+
+systemctl start mysqld &>> $LOGFILE
+
+VALIDATE $? "Staring MySQL"
+
+mysql_secure_installation --set-root-pass RoboShop@1 &>> $LOGFILE
+
+VALIDATE $? "setting up root password"
